@@ -14,6 +14,20 @@ export default function Home() {
   // react-rewards for the confettie cookies
   const { reward } = useReward("rewardId", "emoji", { emoji: ["🍪"] });
 
+  const sendEmail = async (body: string) => {
+    try {
+      const response = await fetch('/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+    } catch {
+      console.log("error sending email");
+    }
+  }
+
   // play sound with fade in and fade out using web audio api
   const playSound = async () => {
     const audioContext = new ((window as any).AudioContext || (window as any).webkitAudioContext)();
@@ -40,6 +54,7 @@ export default function Home() {
     setFortune(fortunes[randomIndex]);
     playSound();
     reward();
+    await sendEmail(`Picked fortune: ${fortunes[randomIndex]}`);
   };
 
   return (
